@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useQuery } from "react-query";
 import { healthCheckApi } from "./api/apis/healthCheckApi";
 import { api } from "./api/config/axiosConfig";
