@@ -27,7 +27,7 @@ function App() {
 
 
 	return (
-		<Container maxWidth="sm">
+		<Container maxWidth="lg">
             <Routes>
                 <Route path="/" element={<IndexPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
