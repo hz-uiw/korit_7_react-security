@@ -7,6 +7,7 @@ import IndexPage from "./pages/IndexPage/IndexPage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import SigninPage from "./pages/SigninPage/SigninPage";
 import SignupPage from "./pages/SignupPage/SignupPage";
+import { Container } from "@mui/material";
 
 function App() {
     const healthCheckQuery = useQuery(
@@ -26,14 +27,14 @@ function App() {
 
 
 	return (
-		<>
-        <Routes>
-            <Route path="/" element={<IndexPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/signin" element={<SigninPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-        </Routes>
-		</>
+		<Container maxWidth="sm">
+            <Routes>
+                <Route path="/" element={<IndexPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/signin" element={<SigninPage />} />
+                <Route path="/signup" element={<SignupPage />} />
+            </Routes>
+		<Container />
 	);
 }
 
