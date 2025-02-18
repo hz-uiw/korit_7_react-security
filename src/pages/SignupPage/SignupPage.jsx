@@ -63,7 +63,7 @@ function SignupPage(props) {
         try {
             await api.post("/api/auth/signup", signupInput);
             alert("회원가입 완료");
-            navigate("/signin");
+            navigate("/auth/signin");
         } catch(error) {
             setErrors({
                 username: error.response.data.data.username,
