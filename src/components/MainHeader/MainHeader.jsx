@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
-import { api } from '../../api/config/axiosConfig';
+import { api, setAccessToken } from '../../api/config/axiosConfig';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { Box, Button, ButtonGroup, Typography } from '@mui/material';
 
@@ -12,14 +12,9 @@ function MainHeader(props) {
     const userQueryData = queryClient.getQueryData(["userQuery"]);
 
     const handleLogOutOnClick = () => {
-        localStorage.removeItem("AccessToken");
-        api.interceptors.request.use(config => {
-            config.headers.Authorization = null;
-            return config;
-        });
-        userQuery.invalidateQueries({
+        setAccessToken(null);
+        queryClient.invalidateQueries({
             queryKey: ["userQuery"],
-            refetchType: 'active',
         });
         navigate("/auth/signin")
     }

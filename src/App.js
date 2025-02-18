@@ -40,7 +40,7 @@ function App() {
 	return (
 		<Container maxWidth="lg">
             {
-                !userQuery.isLoading &&
+                (!userQuery.isLoading && !userQuery.isRefetching) &&
             <>
                 <MainHeader />
                 <Routes>
