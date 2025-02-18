@@ -35,7 +35,7 @@ function App() {
                 return;
             }
             const decodedJwt = jwtDecode(accessToken);
-            return userApi(decodedJwt.userId);
+            return await userApi(decodedJwt.userId);
         },
         {
             retry: 0,
@@ -49,7 +49,7 @@ function App() {
             {
                 !userQuery.isLoading &&
             <>
-                <Box display={"flex"} justifyContent={"space-betweent"}>
+                <Box display={"flex"} justifyContent={"space-between"}>
                     <Typography variant="h6">로고</Typography>
                     <ButtonGroup variant="outlined" aria-label="Basic button group">
                         {
