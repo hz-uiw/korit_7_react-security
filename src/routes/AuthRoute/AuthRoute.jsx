@@ -7,8 +7,6 @@ import { useQueryClient } from '@tanstack/react-query';
 function AuthRoute(props) {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-    console.log(queryClient.getQueryState(["userQuery"]));
-    console.log(queryClient.getQueryData(["userQuery"]));
     const isLogin = !!queryClient.getQueryData(["userQuery"]);
 
     useEffect(() => {

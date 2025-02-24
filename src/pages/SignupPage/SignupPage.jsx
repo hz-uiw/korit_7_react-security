@@ -3,18 +3,17 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../../api/config/axiosConfig';
 
-/*
-    로그인 요구사항
-    각 필드가 공백인지만 체크(공백이면 아래 오류 메시지로)
-    로그인 버튼 클릭시 /api/auth/signin 요청 
-    -> 응답 받은 accessToken을 localStorage의 AccessToken이라는 키값으로 저장.
-    Index페이지로 이동
-    계정이 없으신가요? 회원가입 구현
-*/
 function SignupPage(props) {
     const navigate = useNavigate();
 
-    const [signupInput, setSignupInput] = useState({
+    const [ signupInput, setSignupInput ] = useState({
+        username: "",
+        password: "",
+        name: "",
+        email: "",
+    });
+
+    const [ errors, setErrors ] = useState({
         username: "",
         password: "",
         name: "",
@@ -28,42 +27,37 @@ function SignupPage(props) {
         });
     }
 
-    const [errors, setErrors] = useState({
-        username: "",
-        password: "",
-        name: "",
-        email: "",
-    });
-
     const handleInputOnBlur = (e) => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         let message = "";
-        if(name === "username" && !(/^[a-zA-Z0-9_]{5,20}$/.test(value))) {
-            message = "올바른 사용자 이름을 입력하세요.";
+
+        if(name === "username" && !(/^[a-zA-Z0-9_]{4,16}$/.test(value))) {
+            message = "올바른 사용자 이름을 입력하세요."
         }
-        if(name === "password" && !(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,20}$/.test(value))) {
-            message = "영어 대소문자, 숫자, 특수문자를 하나 이상 포함하여 8~20자리로 작성하세요";
+        if(name === "password" && !(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+~`|{}:;'<>,.?/-])[A-Za-z\d!@#$%^&*()_+~`|{}:;'<>,.?/-]{8,}$/.test(value))) {
+            message = "영어 대소문자, 숫자, 특수문자를 하나이상 포함하며 8자 이상으로 작성하세요.";
         }
-        if(name === "name" && !(/^[가-힣a-zA-Z]{2,30}$/.test(value))) {
-            message = "두 글자 이상 입력하세요요.";
+        if(name === "name" && !(/^[가-힇]{2,}$/.test(value))) {
+            message = "한글 이름만 가능합니다."
         }
-        if(name === "email" && !(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value))) {
-            message = "올바른 이메일을 입력하세요.";
+        if(name === "email" && !(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(value))) {
+            message = "올바른 이메일을 입력하세요."
         }
+
         setErrors({
             ...errors,
-            [name]: message,
+            [name]: message
         });
     }
-    
+
     const handleSignupButtonOnClick = async () => {
-        if(Object.entries(errors).filter(entry => !entry[1]) > 0) {
+        if(Object.entries(errors).filter(entry => !!entry[1]).length > 0 ) {
             return;
         }
         try {
             await api.post("/api/auth/signup", signupInput);
-            alert("회원가입 완료");
-            navigate("/auth/signin");
+            alert("회원가입 완료.");
+            navigate("/signin");
         } catch(error) {
             setErrors({
                 username: error.response.data.data.username,
@@ -74,17 +68,16 @@ function SignupPage(props) {
         }
     }
 
-
     // const handleSignupButtonOnClick = async () => {
     //     try {
     //         const response = await api.post("/api/auth/signup", signupInput);
     //         console.log(response.data);
-    //     } catch(error) {
+    //     }catch(error) {
     //         console.error(error.response.data.data);
     //         let newError = {};
     //         const responseErrors = error.response.data.data;
     //         for(let e of responseErrors) {
-    //             const errorEntry = Object.entries(e)[0]
+    //             const errorEntry = Object.entries(e)[0];
     //             newError = {
     //                 ...newError,
     //                 [errorEntry[0]]: errorEntry[1],
@@ -100,41 +93,36 @@ function SignupPage(props) {
     //     }
     // }
 
-    
+    console.log(errors);
+
     return (
         <Box mt={10}>
             <Container maxWidth={"xs"}>
                 <Card variant='outlined'>
                     <CardContent>
-                        <Typography variant='h4' textAlign={'center'} className='mb-4 text-center'>회원가입</Typography>
-                        <Box display={"flex"} flexDirection={"column"} gap={2}>
-                            <TextField type='text' label="username" name="username" 
+                        <Typography variant='h4' textAlign={'center'}>회원가입</Typography>
+                        <Box display={"flex"} flexDirection={'column'} gap={2}>
+                            <TextField type='text' label="username" name='username' 
                                 onChange={handleSignupInputOnChange} value={signupInput.username}
+                                onBlur={handleInputOnBlur} 
                                 error={!!errors.username}
-                                helperText={errors.username}
-                                onBlur={handleInputOnBlur}/>
-                            
-                            <TextField type='password' label="password" name="password" 
-                                onChange={handleSignupInputOnChange} value={signupInput.password}
+                                helperText={errors.username} />
+                            <TextField type='password' label="password" name='password' 
+                                onChange={handleSignupInputOnChange} value={signupInput.password} 
+                                onBlur={handleInputOnBlur} 
                                 error={!!errors.password}
-                                helperText={errors.password}
-                                onBlur={handleInputOnBlur}/>
-                            
-                            <TextField type='text' label="name" name="name" 
-                                onChange={handleSignupInputOnChange} value={signupInput.name}
+                                helperText={errors.password} />
+                            <TextField type='text' label="name" name='name' 
+                                onChange={handleSignupInputOnChange} value={signupInput.name} 
+                                onBlur={handleInputOnBlur} 
                                 error={!!errors.name}
-                                helperText={errors.name}
-                                onBlur={handleInputOnBlur}/>
-                            
-                            <TextField type='email' label="email" name="email" 
-                                onChange={handleSignupInputOnChange} value={signupInput.email}
+                                helperText={errors.name} />
+                            <TextField type='email' label="email" name='email' 
+                                onChange={handleSignupInputOnChange} value={signupInput.email} 
+                                onBlur={handleInputOnBlur} 
                                 error={!!errors.email}
-                                helperText={errors.email}
-                                onBlur={handleInputOnBlur}/>
-
-                            <Button variant='contained' onClick={handleSignupButtonOnClick}>
-                                가입하기
-                            </Button>
+                                helperText={errors.email} />
+                            <Button variant='contained' onClick={handleSignupButtonOnClick}>가입하기</Button>
                         </Box>
                         <Typography variant='h6' textAlign={'center'}>
                             이미 계정이 있나요? <Link to={"/signin"}>로그인</Link>

@@ -1,15 +1,12 @@
 import axios from "axios";
-// 엑시오스 객체를 만듦
+
 export const api = axios.create({
     baseURL: "http://localhost:8080",
-    headers: {
-        Authorization: !!localStorage.getItem("AccessToken") && `Bearer ${localStorage.getItem("AccessToken")}`,
-    }
 });
 
 api.interceptors.request.use(config => {
     const token = localStorage.getItem("AccessToken");
-    if(!!token) {
+    if (!!token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
@@ -20,5 +17,13 @@ export const setAccessToken = (token) => {
         localStorage.setItem("AccessToken", token);
     } else {
         localStorage.removeItem("AccessToken");
+    }
+};
+
+export const setRefreshToken = (token) => {
+    if (!!token) {
+        localStorage.setItem("RefreshToken", token);
+    } else {
+        localStorage.removeItem("RefreshToken");
     }
 };
